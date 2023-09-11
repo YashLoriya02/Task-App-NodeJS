@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
+const Task = require('./task');
 const validator = require('validator');
 const bcrypt = require('bcrypt')
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
 mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api');
 

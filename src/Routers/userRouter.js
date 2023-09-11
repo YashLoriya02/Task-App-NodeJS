@@ -1,6 +1,7 @@
 const express = require('express')
 const User = require('../models/user')
 const auth = require('../middleware/auth')
+const Task = require('../models/task')
 
 const userApp = new express.Router()
 
@@ -95,11 +96,11 @@ userApp.post('/users/logout/all' , auth , async (req , res) => {
 userApp.delete('/users/me' , auth , async (req , res) => {
     try {
         await User.findByIdAndDelete(req.user._id)
+        await Task.deleteMany({ owner : req.user._id })
         res.status(201).send({message : "User Deleted Successfully"})
     }
     catch(error) {
         res.status(500).send()
-        console.log(error)
     }
 })
 
