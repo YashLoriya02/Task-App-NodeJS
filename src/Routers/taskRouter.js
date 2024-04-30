@@ -1,12 +1,12 @@
 const express = require('express')
 const Task = require('../models/task')
-const auth = require('../middleware/auth')
+const authMiddleware = require('../middleware/auth')
 
 const taskApp = new express.Router()
 
 // Creating Task
 
-taskApp.post('/tasks', auth ,async (req, res) => {
+taskApp.post('/tasks', authMiddleware ,async (req, res) => {
     const task = new Task({...req.body, owner : req.user._id})
 
     try {
@@ -20,7 +20,7 @@ taskApp.post('/tasks', auth ,async (req, res) => {
 
 // Reading Tasks
 
-taskApp.get('/tasks', auth , async (req, res) => {
+taskApp.get('/tasks', authMiddleware , async (req, res) => {
     try {
         const tasks = await Task.find({owner : req.user._id})
         if (!tasks) {
@@ -35,7 +35,7 @@ taskApp.get('/tasks', auth , async (req, res) => {
 
 // Reading Singular Task by ID
 
-taskApp.get('/tasks/:id', auth , async (req, res) => {
+taskApp.get('/tasks/:id', authMiddleware , async (req, res) => {
     const _id = req.params.id
 
     try {
@@ -52,7 +52,7 @@ taskApp.get('/tasks/:id', auth , async (req, res) => {
 
 // Updating Tasks
 
-taskApp.patch('/tasks/:id' , auth , async (req , res) => {
+taskApp.patch('/tasks/:id' , authMiddleware , async (req , res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ["desc" , "completed"]
     const isValidOperation = updates.every( (update) => allowedUpdates.includes(update) )
@@ -77,7 +77,7 @@ taskApp.patch('/tasks/:id' , auth , async (req , res) => {
 
 // Deleting Tasks 
 
-taskApp.delete('/tasks/:id' , auth , async (req , res) => {
+taskApp.delete('/tasks/:id' , authMiddleware , async (req , res) => {
     try {
         const task = await Task.findByIdAndDelete({ _id : req.params.id , owner : req.user._id})
 
